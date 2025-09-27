@@ -1,26 +1,45 @@
+# version: 2.1
+
+# workflows:
+#   hello-world-pipeline:
+#     jobs:
+#       - say-hello
+#       - hold_for_approval:
+#           type: approval
+#           requires:
+#             - say-hello
+#       - after-approval:
+#           requires:
+#             - hold_for_approval
+
+# jobs:
+#   say-hello:
+#     docker:
+#       - image: cimg/base:stable
+#     steps:
+#       - run: echo "Hello World"
+
+#   after-approval:
+#     docker:
+#       - image: cimg/base:stable
+#     steps:
+#       - run: echo "This runs only after manual approval!"
+
+
 version: 2.1
 
-workflows:
-  hello-world-pipeline:
-    jobs:
-      - say-hello
-      - hold_for_approval:
-          type: approval
-          requires:
-            - say-hello
-      - after-approval:
-          requires:
-            - hold_for_approval
-
 jobs:
-  say-hello:
-    docker:
-      - image: cimg/base:stable
+  same-job:
+    docker: [{ image: cimg/base:stable }]
     steps:
-      - run: echo "Hello World"
-
-  after-approval:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - run: echo "This runs only after manual approval!"
+      - checkout
+      - run:
+          name: Set dynamic env
+          command: |
+            echo 'export FOO="hello-from-step-1"' >> "$BASH_ENV"
+            echo 'export BUILD_NUM='"$CIRCLE_BUILD_NUM" >> "$BASH_ENV"
+      - run:
+          name: Use it later in same job
+          command: |
+            echo "FOO=$FOO"
+            echo "BUILD_NUM=$BUILD_NUM"
