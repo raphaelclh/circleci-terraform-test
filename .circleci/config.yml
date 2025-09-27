@@ -28,18 +28,54 @@
 
 version: 2.1
 
+workflows:
+  demo-flow:
+    jobs:
+      - build
+      - test:
+          requires: [build]
+
 jobs:
-  same-job:
-    docker: cimg/base:stable
+  build:
+    docker: [{ image: cimg/base:stable }]
     steps:
       - checkout
+
+      # Create a file we want to share
       - run:
-          name: Set dynamic env
+          name: Create file
           command: |
-            echo 'export FOO="hello-from-step-1"' >> "$BASH_ENV"
-            echo 'export BUILD_NUM='"$CIRCLE_BUILD_NUM" >> "$BASH_ENV"
+            mkdir -p ws
+            echo "Hello from build job" > ws/message.txt
+
+      # Create an env file we want to share
       - run:
-          name: Use it later in same job
+          name: Create env file
           command: |
-            echo "FOO=$FOO"
-            echo "BUILD_NUM=$BUILD_NUM"
+            mkdir -p ws
+            echo 'export APP_VERSION="1.2.3"' >> ws/env.sh
+            echo 'export DEPLOY_ENV="staging"' >> ws/env.sh
+
+      # Persist to workspace (files + env.sh together)
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ws
+
+  test:
+    docker: [{ image: cimg/base:stable }]
+    steps:
+      - attach_workspace:
+          at: .
+
+      - run:
+          name: Load env vars
+          command: |
+            source ws/env.sh
+            echo "APP_VERSION=$APP_VERSION"
+            echo "DEPLOY_ENV=$DEPLOY_ENV"
+
+      - run:
+          name: Use shared file
+          command: |
+            cat ws/message.txt
