@@ -81,29 +81,29 @@ jobs:
             echo 'export DEPLOY_ENV="staging"' >> ws/env.sh
 
       # Persist to workspace (files + env.sh together)
+      # - persist_to_workspace:
+      #     root: .
+      #     paths:
+      #       - ws
       - persist_to_workspace:
           root: .
           paths:
-            - ws
-      - persist_to_workspace:
-        root: .
-        paths:
-          - tmp/terraform-sa.json
+            - tmp/terraform-sa.json
 
   test:
     docker: [{ image: cimg/base:stable }]
     steps:
-      - attach_workspace:
-          at: .
+      # - attach_workspace:
+      #     at: .
       - attach_workspace:
           at: /
 
-      - run:
-          name: Load env vars
-          command: |
-            source ws/env.sh
-            echo "APP_VERSION=$APP_VERSION"
-            echo "DEPLOY_ENV=$DEPLOY_ENV"
+      # - run:
+      #     name: Load env vars
+      #     command: |
+      #       source ws/env.sh
+      #       echo "APP_VERSION=$APP_VERSION"
+      #       echo "DEPLOY_ENV=$DEPLOY_ENV"
       - run:
           name: Show credential env
           shell: /bin/bash -eo pipefail
@@ -112,7 +112,7 @@ jobs:
             test -f "${GOOGLE_APPLICATION_CREDENTIALS:-/tmp/terraform-sa.json}" && ls -l "$GOOGLE_APPLICATION_CREDENTIALS"
 
 
-      - run:
-          name: Use shared file
-          command: |
-            cat ws/message.txt
+      # - run:
+      #     name: Use shared file
+      #     command: |
+      #       cat ws/message.txt
