@@ -26,9 +26,26 @@
 #       - run: echo "This runs only after manual approval!"
 
 
+parameters:
+  environment:
+    type: enum
+    default: "test"
+    enum:
+      - "prod"
+      - "test"
+  stack:
+    type: enum
+    default: ""
+    enum:
+      - ""
+      - "passport_ocr"
 version: 2.1
 
 workflows:
+  when:
+    condition:
+      not:
+        equal: [ "<< pipeline.parameters.stack >>", "" ]
   demo-flow:
     jobs:
       - build
