@@ -43,10 +43,7 @@ version: 2.1
 
 workflows:
   demo-flow:
-    when:
-      condition:
-        not:
-          equal: [ "", << pipeline.parameters.stack >> ]
+    when: << pipeline.parameters.stack >> != ""
     jobs:
       - build
       - test:
