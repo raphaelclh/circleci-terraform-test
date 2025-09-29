@@ -46,16 +46,13 @@ jobs:
           shell: /bin/bash -eo pipefail
           command: |
 
-              printf '%s' "$GOOGLE_CREDENTIALS_JSON" | base64 --decode > ./terraform-sa.json  
-              
-              chmod 600 /tmp/terraform-sa.json
-              echo 'export GOOGLE_APPLICATION_CREDENTIALS=/tmp/terraform-sa.json' >> "$BASH_ENV"
-              echo 'export TF_VAR_credentials_file=/tmp/terraform-sa.json' >> "$BASH_ENV"
-              echo "GOOGLE_APPLICATION_CREDENTIALS will be sourced as tmp/terraform-sa.json"
-              ls -l /tmp/terraform-sa.json/
-            else
-              echo "GOOGLE_CREDENTIALS_JSON is empty; skipping ADC setup" >&2
-            fi
+            printf '%s' "$GOOGLE_CREDENTIALS_JSON" | base64 --decode > ./terraform-sa.json  
+            
+            chmod 600 /tmp/terraform-sa.json
+            echo 'export GOOGLE_APPLICATION_CREDENTIALS=/tmp/terraform-sa.json' >> "$BASH_ENV"
+            echo 'export TF_VAR_credentials_file=/tmp/terraform-sa.json' >> "$BASH_ENV"
+            echo "GOOGLE_APPLICATION_CREDENTIALS will be sourced as tmp/terraform-sa.json"
+            ls -l /tmp/terraform-sa.json/
 
       # Create a file we want to share
       - run:
