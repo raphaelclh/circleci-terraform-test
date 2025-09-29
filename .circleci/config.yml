@@ -85,12 +85,18 @@ jobs:
           root: .
           paths:
             - ws
+      - persist_to_workspace:
+        root: .
+        paths:
+          - tmp/terraform-sa.json
 
   test:
     docker: [{ image: cimg/base:stable }]
     steps:
       - attach_workspace:
           at: .
+      - attach_workspace:
+          at: /
 
       - run:
           name: Load env vars
