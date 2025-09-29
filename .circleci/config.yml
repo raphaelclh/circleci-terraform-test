@@ -52,7 +52,7 @@ jobs:
             echo 'export GOOGLE_APPLICATION_CREDENTIALS=/tmp/terraform-sa.json' >> "$BASH_ENV"
             echo 'export TF_VAR_credentials_file=/tmp/terraform-sa.json' >> "$BASH_ENV"
             echo "GOOGLE_APPLICATION_CREDENTIALS will be sourced as tmp/terraform-sa.json"
-            ls -l ./terraform-sa.json/
+            ls -l /tmp/terraform-sa.json/
 
       # Create a file we want to share
       - run:
