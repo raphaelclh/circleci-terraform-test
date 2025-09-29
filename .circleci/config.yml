@@ -46,13 +46,23 @@ jobs:
           shell: /bin/bash -eo pipefail
           command: |
 
-            printf '%s' "$GOOGLE_CREDENTIALS_JSON" | base64 --decode > /tmp/terraform-sa.json  
-            
+            if [ -n "$GOOGLE_CREDENTIALS_JSON" ]; then
+            # Try base64 decode; fallback to plain JSON
+            if printf '%s' "$GOOGLE_CREDENTIALS_JSON" | base64 --decode > /tmp/terraform-sa.json 2>/dev/null; then
+              echo "Decoded GOOGLE_CREDENTIALS_JSON from base64"
+            else
+              printf '%s' "$GOOGLE_CREDENTIALS_JSON" > /tmp/terraform-sa.json
+              echo "Wrote GOOGLE_CREDENTIALS_JSON as plain JSON"
+            fi
+    
             chmod 600 /tmp/terraform-sa.json
             echo 'export GOOGLE_APPLICATION_CREDENTIALS=/tmp/terraform-sa.json' >> "$BASH_ENV"
             echo 'export TF_VAR_credentials_file=/tmp/terraform-sa.json' >> "$BASH_ENV"
-            echo "GOOGLE_APPLICATION_CREDENTIALS will be sourced as tmp/terraform-sa.json"
-            ls -l /tmp/terraform-sa.json/
+            echo "GOOGLE_APPLICATION_CREDENTIALS will be sourced as /tmp/terraform-sa.json"
+            ls -l /tmp/terraform-sa.json   # ✅ no trailing slash
+          else
+            echo "GOOGLE_CREDENTIALS_JSON is empty; skipping ADC setup" >&2
+          fi
 
       # Create a file we want to share
       - run:
