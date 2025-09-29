@@ -46,7 +46,7 @@ workflows:
     when:
       condition:
         not:
-          equal: [ "<< pipeline.parameters.stack >>", "" ]
+          equal: [ "", << pipeline.parameters.stack >> ]
     jobs:
       - build
       - test:
