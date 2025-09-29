@@ -86,7 +86,7 @@ jobs:
       #     paths:
       #       - ws
       - persist_to_workspace:
-          root: .
+          root: /
           paths:
             - tmp/terraform-sa.json
 
