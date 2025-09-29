@@ -64,13 +64,7 @@ jobs:
               echo "GOOGLE_CREDENTIALS_JSON is empty; skipping ADC setup" >&2
             fi
 
-      - run:
-          name: Show credential env
-          shell: /bin/bash -eo pipefail
-          command: |
-            echo "GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS:-unset}"
-            test -f "${GOOGLE_APPLICATION_CREDENTIALS:-/tmp/terraform-sa.json}" && ls -l "$GOOGLE_APPLICATION_CREDENTIALS"
-
+      
       # Create a file we want to share
       - run:
           name: Create file
@@ -104,6 +98,13 @@ jobs:
             source ws/env.sh
             echo "APP_VERSION=$APP_VERSION"
             echo "DEPLOY_ENV=$DEPLOY_ENV"
+      - run:
+          name: Show credential env
+          shell: /bin/bash -eo pipefail
+          command: |
+            echo "GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS:-unset}"
+            test -f "${GOOGLE_APPLICATION_CREDENTIALS:-/tmp/terraform-sa.json}" && ls -l "$GOOGLE_APPLICATION_CREDENTIALS"
+
 
       - run:
           name: Use shared file
