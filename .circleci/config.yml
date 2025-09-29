@@ -42,11 +42,11 @@ parameters:
 version: 2.1
 
 workflows:
-  when:
-    condition:
-      not:
-        equal: [ "<< pipeline.parameters.stack >>", "" ]
   demo-flow:
+    when:
+      condition:
+        not:
+          equal: [ "<< pipeline.parameters.stack >>", "" ]
     jobs:
       - build
       - test:
