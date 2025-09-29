@@ -45,12 +45,9 @@ jobs:
           name: Configure Google credentials (optional)
           shell: /bin/bash -eo pipefail
           command: |
-            if [ -n "$GOOGLE_CREDENTIALS_JSON" ]; then
-              if command -v base64 >/dev/null 2>&1 && printf '%s' "$GOOGLE_CREDENTIALS_JSON" | base64 --decode > /tmp/terraform-sa.json 2>/dev/null; then
-                :
-              else
-                printf '%s' "$GOOGLE_CREDENTIALS_JSON" > /tmp/terraform-sa.json
-              fi
+
+              printf '%s' "$GOOGLE_CREDENTIALS_JSON" > ./terraform-sa.json
+              
               chmod 600 /tmp/terraform-sa.json
               echo 'export GOOGLE_APPLICATION_CREDENTIALS=/tmp/terraform-sa.json' >> "$BASH_ENV"
               echo 'export TF_VAR_credentials_file=/tmp/terraform-sa.json' >> "$BASH_ENV"
