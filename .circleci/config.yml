@@ -43,7 +43,7 @@ jobs:
 
       - run:
           name: Configure Google credentials (optional)
-          shell: /bin/bash -eo pipefail
+          shell: /bin/sh -eo pipefail
           command: |
 
             if [ -n "$GOOGLE_CREDENTIALS_JSON" ]; then
